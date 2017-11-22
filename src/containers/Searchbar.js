@@ -17,9 +17,15 @@ export default class Searchbar extends Component {
         console.log(this.state.inputValue);
     }
 
+    onFormSubmit(event) {
+        event.preventDefault();
+    }
+
     render() {
         return(
-            <form className='input-group'>
+            <form 
+                onSubmit={this.onFormSubmit} 
+                className='input-group'>
 
                 <input 
                     placeholder='Get a forcast'
@@ -35,6 +41,7 @@ export default class Searchbar extends Component {
                         Submit
                     </button>
                 </span>
+
             </form>
         );
     }
