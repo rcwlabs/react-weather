@@ -1,48 +1,55 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchWeather } from '../actions/index';
 
-export default class Searchbar extends Component {
-
+class Searchbar extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            inputValue: ''
+            term: ''
         };
 
-        this.onInputChange = this.onInputChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleOnSubmit = this.handleOnSubmit.bind(this);
     }
 
-    onInputChange(event) {
-        this.setState({inputValue: event.target.value});
-        console.log(this.state.inputValue);
+    handleInputChange(e) {
+        this.setState({
+            term: e.target.value
+        });
     }
 
-    onFormSubmit(event) {
-        event.preventDefault();
+    handleOnSubmit(e) {
+        e.preventDefault();
+
+        // call callback function and send term back to App
+        this.props.fetchWeather(this.state.term);
+        this.setState({ term: '' });
     }
 
     render() {
         return(
-            <form 
-                onSubmit={this.onFormSubmit} 
-                className='input-group'>
-
-                <input 
-                    placeholder='Get a forcast'
-                    className='form-control'
-                    value={this.state.inputValue}
-                    onChange={this.onInputChange}
-                />
-
-                <span className='input-group-btn'>
-                    <button 
-                        type='submit' 
-                        className='btn btn-secondary'>
-                        Submit
-                    </button>
-                </span>
-
-            </form>
+            <div>
+                <form 
+                    className='input-group'
+                    onSubmit={this.handleOnSubmit}
+                >
+                    <input placeholder='Get a forecast'
+                        value={this.state.term} 
+                        onChange={this.handleInputChange}/>
+                    <span className='input-group-btn'>
+                        <button type='submit' className='btn btn-secondary'>Submit</button>
+                    </span>
+                </form>
+            </div>
         );
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ fetchWeather }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(Searchbar);
